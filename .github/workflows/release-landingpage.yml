@@ -2,6 +2,7 @@ name: Release landingpage image
 
 on:
   repository_dispatch:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -15,7 +16,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Build Docker image
         run: |
           docker pull ghcr.io/home-assistant/green-homeassistant:landingpage
