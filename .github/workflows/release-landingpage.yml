@@ -20,6 +20,6 @@ jobs:
       - name: Build Docker image
         run: |
           docker pull ghcr.io/home-assistant/green-homeassistant:landingpage
-          docker tag ghcr.io/panther-ha/panther-homeassistant:landingpage
+          docker tag ghcr.io/home-assistant/green-homeassistant:landingpage ghcr.io/panther-ha/panther-homeassistant:landingpage
           docker push ghcr.io/panther-ha/panther-homeassistant:landingpage
 
