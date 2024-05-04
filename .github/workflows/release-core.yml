@@ -1,0 +1,40 @@
+name: Release core and landingpage image
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      set_release:
+        description: "Select Core Release."
+        required: false
+        default: "2024.3.3"
+        type: choice
+        options:
+          - "2024.3.3"
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    if: ${{ github.event.repository.owner.id }} == ${{ github.event.sender.id }}
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3.1.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: |
+          docker pull ghcr.io/home-assistant/green-homeassistant:landingpage
+          docker tag ghcr.io/home-assistant/green-homeassistant:landingpage ghcr.io/panther-ha/panther-homeassistant:landingpage
+          docker push ghcr.io/panther-ha/panther-homeassistant:landingpage
+          docker pull ghcr.io/home-assistant/green-homeassistant:${{ inputs.set_release }}
+          docker tag ghcr.io/home-assistant/green-homeassistant:${{ inputs.set_release }} ghcr.io/panther-ha/panther-homeassistant:${{ inputs.set_release }}
+          docker push ghcr.io/panther-ha/panther-homeassistant:${{ inputs.set_release }}
+
